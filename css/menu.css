@@ -1,0 +1,71 @@
+.menu {
+	position: fixed;
+	left: 0;
+	top: 0;
+	right: 0;
+	height: 100%;
+	max-width: 354px;
+	min-width: 260px;
+	background-color: #848F9C;
+	transform: translate3d(-100%, 0, 0);
+}
+
+.menu__title {
+	position: absolute;
+	left: 100%;
+	top: 0;
+	width: 60px;
+	height: 60px;
+	font-size: 0;
+	line-height: 0;
+	cursor: pointer;
+	background-color: #75808D;
+}
+
+.menu__title::after {
+	position: absolute;
+	left: 20px;
+	top: 50%;
+	margin-top: -8px;
+	width: 22px;
+	height: 15px;
+	content: "";
+	background: url("data:image/svg+xml,%3Csvg%20version%3D%221.1%22%20baseProfile%3D%22full%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20xmlns%3Aev%3D%22http%3A%2F%2Fwww.w3.org%2F2001%2Fxml-events%22%20xml%3Aspace%3D%22preserve%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2222px%22%20height%3D%2215px%22%20%20viewBox%3D%220%200%2022%2015%22%20preserveAspectRatio%3D%22none%22%20shape-rendering%3D%22geometricPrecision%22%3E%3Cpath%20fill%3D%22%23fff%22%20d%3D%22M0%2C9h22V6H0V9z%20M0%2C15h22v%2D3H0V15z%20M0%2C0v3h22V0H0z%22%2F%3E%3C%2Fsvg%3E") 50% 50% no-repeat;
+}
+
+.swipeMenu-opened .menu__title::after {
+	background: url("data:image/svg+xml,%3Csvg%20version%3D%221.1%22%20baseProfile%3D%22full%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20xmlns%3Aev%3D%22http%3A%2F%2Fwww.w3.org%2F2001%2Fxml-events%22%20xml%3Aspace%3D%22preserve%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2218px%22%20height%3D%2218px%22%20%20viewBox%3D%220%200%2018%2018%22%20preserveAspectRatio%3D%22none%22%20shape-rendering%3D%22geometricPrecision%22%3E%3Cpath%20fill%3D%22%23fff%22%20d%3D%22M18%2C2%2E1L15%2E9%2C0L9%2C6%2E9L2%2E1%2C0L0%2C2%2E1L6%2E9%2C9L0%2C15%2E9L2%2E1%2C18L9%2C11%2E1l6%2E9%2C6%2E9l2%2E1%2D2%2E1L11%2E1%2C9L18%2C2%2E1z%22%2F%3E%3C%2Fsvg%3E") 50% 50% no-repeat;
+}
+
+.menu__scroll {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	width: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.menu__list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.menu__list li {
+	border: solid rgba(255, 255, 255, 0.1);
+	border-width: 1px 0 0;
+}
+
+.menu__list li:first-child {
+	border: none;
+}
+
+.menu__list a {
+	color: #FFF;
+	line-height: 1;
+	display: block;
+	text-decoration: none;
+	padding: 17px 20px 18px;
+}
