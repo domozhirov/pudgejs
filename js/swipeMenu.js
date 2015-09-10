@@ -3,6 +3,16 @@
 	var __pluginName = "swipeMenu";
 
 	var Obj = function($elem, opt) {
+
+		this.opt = $.extend({
+			button: opt.button,
+			duration: opt.duration,
+			wrapper: opt.wrapper,
+			timing: opt.timing,
+			position: opt.position,
+			
+		}, opt);
+
 		this.$elem = $elem;
 		this.$win = $(window);
 		this.$doc = $(document);
@@ -11,21 +21,12 @@
 		this.scrollPosition = 0;
 		this.elemPosition = 0;
 		this.elemWidth = $elem.outerWidth();
+		this.duration = !!this.opt.duration ? self.opt.duration : .3;
 		this.isOpened = false;
-		this.isRight = 0;
-		this.isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+		this.isMoved = false;
+		this.isRight = this.opt.position === "right" ? 1 : -1;
+		this.isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);;
 		this.isTouch = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-		this.opt = $.extend({
-			button: opt.button,
-			duration: opt.duration,
-			wrapper: opt.wrapper,
-			timing: opt.timing,
-			direction: opt.direction,
-			
-		}, opt);
-
-		this.isRight = this.opt.direction === "right" ? 1 : -1;
 
 		this.init();
 	};
@@ -42,21 +43,63 @@
 		}, this));
 
 		this.$doc.on(this.isTouch ? "MSPointerDown touchstart" : "mousedown", function(event) {
-				
+			var elemPosition = self.$elem.offset().left,
+				startX = self.pointer(event).x,
+				startY = self.pointer(event).y,
+				direction = undefined;
 
-			self.$doc.on(this.isTouch ? "MSPointerMove.swipeMenu touchmove.swipeMenu" : "mousemove.swipeMenu", function(event) {
+			if (event.target === $(self.opt.button)[0]) return;
 
-				console.log("ok");
+			self.$doc.on(self.isTouch ? "MSPointerMove.swipeMenu touchmove.swipeMenu" : "mousemove.swipeMenu", function(event) {
+				var moveX = self.pointer(event).x - startX,
+					moveY = self.pointer(event).y - startY,
+					move = elemPosition + moveX;
 
+				if (Math.abs(moveX) > Math.abs(moveY) && typeof direction === "undefined") {
+					direction = "horisontal";
+				} else if (Math.abs(moveX) < Math.abs(moveY) && typeof direction === "undefined") {
+					direction = "vertical";
+				}
+
+				if (direction == "horisontal") {
+					event.preventDefault();
+
+					self.isMoved = true;
+					self.$html.addClass("overflowHidden");
+
+					if (move > 0) {
+						move = 0;
+					} else if (move < -self.elemWidth) {
+						move = -self.elemWidth;
+					}
+
+					if (self.generateTransform().x > 0 || self.generateTransform().x < -self.elemWidth) return;
+
+
+					animit(self.$elem[0]).queue({
+						transition: "none",
+						transform: "translate3d(" + move + "px, 0 ,0)"
+					}).play();
+				}
 			});
 		});
 
 		this.$doc.on(this.isTouch ? "MSPointerUp touchend touchcancel" : "mouseup", function(event) {
 			self.$doc.off(".swipeMenu");
+
+			if (event.target === $(self.opt.button)[0]) return;
+
+			if (self.generateTransform().x > -self.elemWidth / 2 && self.isMoved) {
+				self.open(.3);
+			} else if (self.generateTransform().x < -self.elemWidth / 2 && self.isMoved) {
+				self.close(.3);
+			}
+
+			self.isMoved = false;
 		});
 	};
 
-	Obj.prototype.open = function() {
+	Obj.prototype.open = function(duration) {
 		var self = this;
 
 		this.scrollPosition = this.$html.scrollTop() || this.$body.scrollTop();
@@ -66,20 +109,20 @@
 		animit(this.$elem[0]).queue({
 			transform: "translate3d(0, 0 ,0)"
 		}, {
-			duration: self.duration(),
-			timing: !!self.opt.timing ? opt.timing : 'ease'
+			duration: duration,
+			timing: !!self.opt.timing ? opt.timing : "ease"
 		}).play();
 
 		this.$html.addClass("overflowHidden");
 		this.$elem.addClass("swipeMenu-opened");
 
-		if (this.isIOS && !!this.opt.wrapper) {
+		if (this.isIOS && !!this.opt.wrapper && !self.$body.hasClass("overflowHidden")) {
 			this.$body.addClass("overflowHidden");
-			this.opt.wrapper.css("top", -this.scrollPosition);
+			$(this.opt.wrapper).css("top", -this.scrollPosition);
 		}
 	}
 
-	Obj.prototype.close = function() {
+	Obj.prototype.close = function(duration) {
 		var self = this;
 
 		self.isOpened = false;
@@ -88,18 +131,20 @@
 		animit(this.$elem[0]).queue({
 			transform: "translate3d(" + self.elemWidth * self.isRight + "px, 0 ,0)"
 		}, {
-			duration: self.duration(),
-			timing: !!self.opt.timing ? opt.timing : 'ease'
+			duration: duration,
+			timing: !!self.opt.timing ? opt.timing : "ease"
 		}).play(function() {
 			self.$html.removeClass("overflowHidden");
 
 			if (self.isIOS && !!self.opt.wrapper) {
 				setTimeout($.proxy(function() {
-					self.$body.removeClass("overflowHidden");
-					this.opt.wrapper.css("top", 0);
-					$("html, body").scrollTop(this.scrollPosition);
+					if (self.$body.hasClass("overflowHidden")) {
+						self.$body.removeClass("overflowHidden");
+						$(this.opt.wrapper).css("top", 0);
+						$("html, body").scrollTop(this.scrollPosition);
 
-					this.scrollPosition = 0;
+						this.scrollPosition = 0;
+					}
 
 				}, self), 100);
 			}
@@ -109,21 +154,21 @@
 	}
 
 	Obj.prototype.toggle = function() {
-		return this.isOpened ? this.close() : this.open();
+		return this.isOpened ? this.close(this.duration) : this.open(this.duration);
 	}
 
 	Obj.prototype.changePosition = function() {
 		var translatex;
 
 		if (this.isIOS && !!this.opt.wrapper) {
-			var positionTop = Math.abs(parseFloat(this.opt.wrapper.css("top"))),
-				siteheight = this.opt.wrapper.outerHeight(),
+			var positionTop = Math.abs(parseFloat($(this.opt.wrapper).css("top"))),
+				siteheight = $(this.opt.wrapper).outerHeight(),
 				winHeight = $(window).height(),
 				difference = siteheight - positionTop - winHeight;
 
 			if (difference < 0) {
-				_this.scrollTop = _this.scrollTop - Math.abs(difference);
-				this.opt.wrapper.css("top", -_this.scrollTop);
+				this.scrollTop = this.scrollTop - Math.abs(difference);
+				$(this.opt.wrapper).css("top", -this.scrollTop);
 			}
 		}
 
