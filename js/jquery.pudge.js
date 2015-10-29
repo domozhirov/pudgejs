@@ -2,7 +2,7 @@
  * pudgeJs - JQuery plugin for sliding menus and blocks.
  * @version v0.0.1
  * @link https://gitlab.dev.cs.m/pudgeJs
- * @update 26.10.15
+ * @update 29.10.15
  * @license MIT
  */
 /*global $, jQuery*/
@@ -12,11 +12,13 @@
 
 	var Obj = function($elem, opt) {
 		this.opt = $.extend({
-			timing: "ease",
-			duration: .3,
-			overlay: __pluginName + "-overlay",
-			overlayCss: true,
-			button: false
+			timing     : "ease",
+			duration   : .3,
+			button     : false,
+			overlay    : __pluginName + "-overlay",
+			overlayCss : true,
+			slideToOpen  : true,
+			slideToClose : true
 		}, opt);
 
 		this.$elem = $elem;
@@ -31,7 +33,7 @@
 
 		this.isOpened = false;
 		this.isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-		this.isRight = getBoundingClientRect($elem[0]).left < 0 ? -1 : 1;
+		this.isRight = -1;
 		this.isTouch = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
 		               .test(navigator.userAgent);
 
@@ -73,7 +75,6 @@
 		},
 
 		open: function() {
-			console.log('open!');
 			var self = this,
 				duration = self.opt.duration,
 				timing = self.opt.timing;
@@ -94,13 +95,14 @@
 			this.isOpened = true;
 			this.elemWidth = getBoundingClientRect(this.$elem[0]).width;
 			this.scrollTop = this.$html.scrollTop() || this.$body.scrollTop();
+			this.isRight = getBoundingClientRect($elem[0]).left < 0 ? -1 : 1;
 
 			animit(this.$overlay[0]).queue({
-				opacity: 1,
+				opacity: 2,
 				visibility: "visible"
 			}, {
-				duration: duration,
-				timing: timing
+				duration: self.opt.duration,
+				timing: self.opt.timing
 			}).play();
 
 			animit(this.$elem[0]).queue({
@@ -120,7 +122,6 @@
 		},
 
 		close: function() {
-			console.error('close!', this.isOpened);
 			var self = this;
 
 			self.isOpened = false;
@@ -134,12 +135,11 @@
 			}).play();
 
 			animit(this.$elem[0]).queue({
-				transform: "translate3d(" + self.elemWidth * self.isRight + "px, 0 ,0)"
+				transform: "translate3d(" + 100 * self.isRight + "%, 0 ,0)"
 			}, {
 				duration: self.opt.duration,
 				timing: self.opt.timing
 			}).play(function() {
-				console.log(self.isOpened);
 				if (!self.isOpened) {
 					self.$html.removeClass("overflowHidden");
 					self.$overlay.css("visibility", "hidden");
@@ -185,7 +185,7 @@
 
 			self.$doc.on(this.touchEvents.all, function(event) {
 				if ( $(event.target).closest(self.$elem).length || !self.isOpened ||
-					$(event.target).closest(self.opt.button).length ) {
+					 $(event.target).closest(self.opt.button).length ) {
 					return;
 				};
 
@@ -199,7 +199,7 @@
 					started = false;
 					coord.lx = Math.abs(pointer(event).x);
 					coord.ly = Math.abs(pointer(event).y);
-					//console.log(Math.abs(coord.lx - coord.sx)  , Math.abs(coord.ly - coord.sy) );
+
 					if (Math.abs(coord.lx - coord.sx) < 5 && Math.abs(coord.ly - coord.sy) < 5) {
 						self.close();
 					}
@@ -213,7 +213,7 @@
 			if (!!$("." + this.opt.overlay).length) {
 				this.$overlay = $("." + this.opt.overlay);
 				return;
-			}
+			};
 
 			if (this.opt.overlay) {
 				$overlay = $("<div class=\"" + this.opt.overlay + "\"/>");
@@ -229,12 +229,13 @@
 						bottom: 0,
 						opacity: 0,
 						visibility: "hidden"
+
 					});
 				};
 
 				this.$body.append($overlay);
 				this.$overlay = $overlay;
-			}
+			};
 		},
 
 		_onSliding: function() {
@@ -269,11 +270,12 @@
 
 				if ( (self.coord.sx < 20 && !(self.isRight + 1) ||
 				      self.coord.sx > self.$win.width() - 20 && !!(self.isRight + 1) ) &&
-				     !self.isIOS && !self.isOpened && self.direction === "horizontal") {
+				     !self.isIOS && !self.isOpened && self.direction === "horizontal" &&
+				      self.opt.slideToOpen) {
 					moving();
 				};
 
-				if (self.isOpened && self.direction === "horizontal") {
+				if (self.isOpened && self.direction === "horizontal" && self.opt.slideToClose) {
 					moving();
 				};
 
@@ -310,7 +312,8 @@
 					animit(self.$overlay[0]).queue({
 						opacity: (self.elemWidth - Math.abs(coordMove)) / self.elemWidth,
 						visibility: "visible",
-						transition: "none"
+						transition: "none",
+						transform: "translateZ(0)"
 					}).play();
 
 					animit(self.$elem[0]).queue({
@@ -321,8 +324,9 @@
 			};
 
 			function onEnd(event) {
-				console.log('onEnd!');
 				var msl, speed, distance, time, direction;
+
+				console.log(getBoundingClientRect(self.$elem[0]))
 
 				self.coord.lx = Math.abs(pointer(event).x);
 				self.coord.ly = Math.abs(pointer(event).y);
@@ -332,8 +336,6 @@
 					distance = Math.abs(self.moveSpeed[msl-1].s - self.moveSpeed[msl-2].s);
 					time = self.moveSpeed[msl-1].t - self.moveSpeed[msl-2].t;
 					speed = (distance / time);
-
-					console.log(speed);
 
 					if ( self.moveSpeed[msl-1].s > self.moveSpeed[msl-2].s &&
 					   !(self.isRight + 1) )  {
@@ -348,23 +350,21 @@
 					   !!(self.isRight + 1) ) {
 						direction = "right";
 					}
-					console.log(Math.abs(getTransform(self.$elem[0]).x), self.elemWidth / 2);
+
 					if (speed <= .1 && Math.abs(getTransform(self.$elem[0]).x) < self.elemWidth / 2) {
-						self.open();
+						self.open("ease-out");
 					} else if (speed <= .1 && Math.abs(getTransform(self.$elem[0]).x) > self.elemWidth / 2) {
-						self.close();
+						self.close("ease-out");
 					} else if (speed > .1 && direction === "left" && !(self.isRight + 1)) {
-						self.close();
+						self.close("ease-out");
 					} else if (speed > .1 && direction === "right" && !(self.isRight + 1)) {
-						self.open();
+						self.open("ease-out");
 					} else if (speed > .1 && direction === "right" && !!(self.isRight + 1)) {
-						self.close();
+						self.close("ease-out");
 					} else if (speed > .1 && direction === "left" && !!(self.isRight + 1)) {
-						self.open();
+						self.open("ease-out");
 					}
 				}
-
-				//console.log(self.moveSpeed)
 
 				$(this).off(self.touchEvents.move + "." + __pluginName, onMove);
 
