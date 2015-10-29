@@ -73,6 +73,7 @@
 		},
 
 		open: function() {
+			console.log('open!');
 			var self = this,
 				duration = self.opt.duration,
 				timing = self.opt.timing;
@@ -119,6 +120,7 @@
 		},
 
 		close: function() {
+			console.error('close!', this.isOpened);
 			var self = this;
 
 			self.isOpened = false;
@@ -137,8 +139,11 @@
 				duration: self.opt.duration,
 				timing: self.opt.timing
 			}).play(function() {
-				self.$html.removeClass("overflowHidden");
-				self.$overlay.css("visibility", "hidden");
+				console.log(self.isOpened);
+				if (!self.isOpened) {
+					self.$html.removeClass("overflowHidden");
+					self.$overlay.css("visibility", "hidden");
+				}
 
 				// if (self.isIOS && !!self.opt.wrapper) {
 				// 	setTimeout($.proxy(function() {
@@ -194,8 +199,8 @@
 					started = false;
 					coord.lx = Math.abs(pointer(event).x);
 					coord.ly = Math.abs(pointer(event).y);
-
-					if (coord.lx - coord.sx <= 3 && coord.ly - coord.sy <= 3) {
+					//console.log(Math.abs(coord.lx - coord.sx)  , Math.abs(coord.ly - coord.sy) );
+					if (Math.abs(coord.lx - coord.sx) < 5 && Math.abs(coord.ly - coord.sy) < 5) {
 						self.close();
 					}
 				};
@@ -316,6 +321,7 @@
 			};
 
 			function onEnd(event) {
+				console.log('onEnd!');
 				var msl, speed, distance, time, direction;
 
 				self.coord.lx = Math.abs(pointer(event).x);
@@ -323,9 +329,11 @@
 
 				if (self.moveSpeed.length > 1) {
 					msl = self.moveSpeed.length;
-					distance = self.moveSpeed[msl-1].s - self.moveSpeed[msl-2].s;
+					distance = Math.abs(self.moveSpeed[msl-1].s - self.moveSpeed[msl-2].s);
 					time = self.moveSpeed[msl-1].t - self.moveSpeed[msl-2].t;
 					speed = (distance / time);
+
+					console.log(speed);
 
 					if ( self.moveSpeed[msl-1].s > self.moveSpeed[msl-2].s &&
 					   !(self.isRight + 1) )  {
@@ -340,10 +348,10 @@
 					   !!(self.isRight + 1) ) {
 						direction = "right";
 					}
-
-					if (speed < .1 && Math.abs(getTransform(self.$elem[0]).x) < self.elemWidth / 2) {
+					console.log(Math.abs(getTransform(self.$elem[0]).x), self.elemWidth / 2);
+					if (speed <= .1 && Math.abs(getTransform(self.$elem[0]).x) < self.elemWidth / 2) {
 						self.open();
-					} else if (speed < .1 && Math.abs(getTransform(self.$elem[0]).x) > self.elemWidth / 2) {
+					} else if (speed <= .1 && Math.abs(getTransform(self.$elem[0]).x) > self.elemWidth / 2) {
 						self.close();
 					} else if (speed > .1 && direction === "left" && !(self.isRight + 1)) {
 						self.close();
@@ -356,7 +364,7 @@
 					}
 				}
 
-				console.log(self.moveSpeed)
+				//console.log(self.moveSpeed)
 
 				$(this).off(self.touchEvents.move + "." + __pluginName, onMove);
 
