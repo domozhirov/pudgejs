@@ -95,7 +95,7 @@
 			this.isOpened = true;
 			this.elemWidth = getBoundingClientRect(this.$elem[0]).width;
 			this.scrollTop = this.$html.scrollTop() || this.$body.scrollTop();
-			this.isRight = getBoundingClientRect($elem[0]).left < 0 ? -1 : 1;
+			this.isRight = getBoundingClientRect(this.$elem[0]).left < 0 ? -1 : 1;
 
 			animit(this.$overlay[0]).queue({
 				opacity: 2,
@@ -325,8 +325,6 @@
 
 			function onEnd(event) {
 				var msl, speed, distance, time, direction;
-
-				console.log(getBoundingClientRect(self.$elem[0]))
 
 				self.coord.lx = Math.abs(pointer(event).x);
 				self.coord.ly = Math.abs(pointer(event).y);
