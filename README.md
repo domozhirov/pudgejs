@@ -56,8 +56,8 @@ HTML меню
 
 И запускайте!
 ```javascript
-$(function(){
-	$(".mymenu").pudgeJS({});
+$(function() {
+	$(".myMenu").pudgeJS({});
 });
 ```
 
