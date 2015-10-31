@@ -34,6 +34,7 @@ jQuery-плагин, предназначеный для "выезжающего
 
 И JS-файлы плагина *после* библиотеки jQuery:
 ```html
+<script src="js/animit.js"></script>
 <script src="js/jquery.pudge.js"></script>
 ```
 
