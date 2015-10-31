@@ -72,7 +72,7 @@ $(".myMenu").pudgeJS({
 ```
 По умолчанию ```0.3```.
 
-#### Эффект открытия/закрытия
+### Эффект открытия/закрытия
 
 ```javascript
 $(".myMenu").pudgeJS({
@@ -81,7 +81,7 @@ $(".myMenu").pudgeJS({
 ```
 По умолчанию ```ease```.
 
-#### Класс для overlay
+### Класс для overlay
 
 ```javascript
 $(".myMenu").pudgeJS({
@@ -90,7 +90,7 @@ $(".myMenu").pudgeJS({
 ```
 По умолчанию ```pudgeJS-overlay```.
 
-#### Css для overlay true/false
+### Css для overlay true/false
 
 ```javascript
 $(".myMenu").pudgeJS({
@@ -99,7 +99,7 @@ $(".myMenu").pudgeJS({
 ```
 По умолчанию ```true```.
 
-#### Возможность открытия от края (touch)
+### Возможность открытия от края (touch)
 
 ```javascript
 $(".myMenu").pudgeJS({
@@ -108,7 +108,7 @@ $(".myMenu").pudgeJS({
 ```
 По умолчанию ```true```.
 
-#### Возможность закрытия (touch)
+### Возможность закрытия (touch)
 
 ```javascript
 $(".myMenu").pudgeJS({
@@ -117,7 +117,7 @@ $(".myMenu").pudgeJS({
 ```
 По умолчанию ```true```.
 
-#### Класс обертки сайта (iOS)
+### Класс обертки сайта (iOS)
 
 ```javascript
 $(".myMenu").pudgeJS({
@@ -126,31 +126,31 @@ $(".myMenu").pudgeJS({
 ```
 По умолчанию ```false```.
 
-#### Методы
+## Методы
 
-##### Open
+### Open
 ```javascript
 $(".myMenu").pudgeJS("open");
 ```
 
-##### Close
+### Close
 ```javascript
 $(".myMenu").pudgeJS("close");
 ```
 
-##### Toggle
+### Toggle
 ```javascript
 $(".myMenu").pudgeJS("toggle");
 ```
 
-##### Update
+### Update
 ```javascript
 $(".myMenu").pudgeJS("update", {
 	// new opt
 });
 ```
 
-##### Destroy
+### Destroy
 ```javascript
 $(".myMenu").pudgeJS("destroy");
 ```
