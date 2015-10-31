@@ -172,6 +172,7 @@
 				visibility: "hidden",
 				opacity: 0
 			});
+			this.$doc.off(this.touchEvents.start + "." + __pluginName);
 			this.$elem.removeData(__pluginName);
 		},
 
