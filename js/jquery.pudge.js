@@ -2,7 +2,7 @@
  * pudgeJs - JQuery plugin for sliding menus and blocks.
  * @version v0.0.1
  * @link https://gitlab.dev.cs.m/pudgeJs
- * @update 29.10.15
+ * @update 02.11.15
  * @license MIT
  */
 /*global $, jQuery*/
@@ -331,16 +331,23 @@
 			};
 
 			function onEnd(event) {
-				var msl, speed, distance, time, direction;
+				var msl, speed, distance, time, direction, position;
 
 				self.coord.lx = Math.abs(pointer(event).x);
 				self.coord.ly = Math.abs(pointer(event).y);
+
 
 				if (self.moveSpeed.length > 1) {
 					msl = self.moveSpeed.length;
 					distance = Math.abs(self.moveSpeed[msl-1].s - self.moveSpeed[msl-2].s);
 					time = self.moveSpeed[msl-1].t - self.moveSpeed[msl-2].t;
 					speed = (distance / time);
+
+					if (!(self.isRight + 1)) {
+						position = Math.abs(getBoundingClientRect(self.$elem[0]).left);
+					} else {
+						position = Math.abs(getBoundingClientRect(self.$elem[0]).right - self.$win.width());
+					}
 
 					if ( self.moveSpeed[msl-1].s > self.moveSpeed[msl-2].s &&
 					   !(self.isRight + 1) )  {
@@ -356,9 +363,9 @@
 						direction = "right";
 					}
 
-					if (speed <= .1 && Math.abs(getTransform(self.$elem[0]).x) < self.elemWidth / 2) {
+					if (speed <= .1 && position < self.elemWidth / 2) {
 						self.open("ease-out");
-					} else if (speed <= .1 && Math.abs(getTransform(self.$elem[0]).x) > self.elemWidth / 2) {
+					} else if (speed <= .1 && position > self.elemWidth / 2) {
 						self.close("ease-out");
 					} else if (speed > .1 && direction === "left" && !(self.isRight + 1)) {
 						self.close("ease-out");
