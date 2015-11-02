@@ -275,8 +275,8 @@
 					                 "horizontal" : "vertical";
 				};
 
-				if ( (self.coord.sx < 20 && !(self.isRight + 1) ||
-				      self.coord.sx > self.$win.width() - 20 && !!(self.isRight + 1) ) &&
+				if ( (self.coord.sx < 40 && !(self.isRight + 1) ||
+				      self.coord.sx > self.$win.width() - 40 && !!(self.isRight + 1) ) &&
 				     !self.isIOS && !self.isOpened && self.direction === "horizontal" &&
 				      self.opt.slideToOpen) {
 					moving();
