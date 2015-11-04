@@ -2,7 +2,7 @@
  * pudgeJs - JQuery plugin for sliding menus and blocks.
  * @version v0.0.1
  * @link https://gitlab.dev.cs.m/pudgeJs
- * @update 02.11.15
+ * @update 04.11.15
  * @license MIT
  */
 /*global $, jQuery*/
@@ -111,13 +111,13 @@
 				timing: self.opt.timing
 			}).play();
 
-			this.$html.addClass("overflowHidden");
+			this.$html.addClass("overflowHidden userSelect");
 			this.$elem.addClass(__pluginName + "-opened");
 
 
 			if (this.isIOS && !!this.opt.wrapper && !this.scrollTop) {
 				this.scrollTop = this.$html.scrollTop() || this.$body.scrollTop();
-				this.$body.addClass("overflowHidden");
+				this.$body.addClass("overflowHidden userSelect");
 				$(this.opt.wrapper).css("top", -this.scrollTop);
 			}
 		},
@@ -142,13 +142,13 @@
 				timing: self.opt.timing
 			}).play(function() {
 				if (!self.isOpened) {
-					self.$html.removeClass("overflowHidden");
+					self.$html.removeClass("overflowHidden userSelect");
 					self.$overlay.css("visibility", "hidden");
 				}
 
 				if (self.isIOS && !!self.opt.wrapper) {
 					setTimeout($.proxy(function() {
-						self.$body.removeClass("overflowHidden");
+						self.$body.removeClass("overflowHidden userSelect");
 						$(this.opt.wrapper).css("top", 0);
 						$("html, body").scrollTop(this.scrollTop);
 
@@ -312,8 +312,8 @@
 						self.moveSpeed.shift();
 					}
 
-					if (!self.$html.hasClass("overflowHidden")) {
-						self.$html.addClass("overflowHidden");
+					if (!self.$html.hasClass("overflowHidden userSelect")) {
+						self.$html.addClass("overflowHidden userSelect");
 					}
 
 					animit(self.$overlay[0]).queue({
