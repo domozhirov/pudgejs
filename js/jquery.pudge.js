@@ -1,8 +1,8 @@
 /**
  * pudgeJs - JQuery plugin for sliding menus and blocks.
- * @version v0.0.1
- * @link https://gitlab.dev.cs.m/pudgeJs
- * @update 04.11.15
+ * @version v0.1.4
+ * @link http://gitlab.dev.cs.m/mihail.domozhirov/pudgejs
+ * @update 07.11.15
  * @license MIT
  */
 /*global $, jQuery*/
@@ -363,7 +363,7 @@
 						direction = "right";
 					}
 
-					if (speed <= .1 && position < self.elemWidth / 2) {
+					if (speed <= .1 && position <= self.elemWidth / 2) {
 						self.open("ease-out");
 					} else if (speed <= .1 && position > self.elemWidth / 2) {
 						self.close("ease-out");
