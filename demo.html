@@ -67,16 +67,16 @@
 </div>
 
 <script src="http://megagroup.ru/g/libs/jquery/1.10.2/jquery.min.js"></script>
-<script src="js/animit.js"></script>
+<script src="js/animit.min.js"></script>
 <script src="js/jquery.pudge.js"></script>
 <script>
-	var swipeMenu = $(".menu").pudgeJS({
+	var pushEl = $(".menu").pudgeJS({
 		// option
 	});
 
 	$(".menu__title").on("click", function(event) {
 		event.preventDefault();
-		swipeMenu.pudgeJS("toggle");
+		pushEl.pudgeJS("toggle");
 	});
 </script>	
 </body>
