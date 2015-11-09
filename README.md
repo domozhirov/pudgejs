@@ -30,6 +30,11 @@ jQuery-плагин, предназначеный для "выезжающего
 	overflow-y: auto;
 	overflow-x: hidden;
 }
+
+// Цвет для подложки
+.pudgeJS-overlay {
+	background-color: rgba(0, 0, 0, .7);
+}
 ```
 
 И JS-файлы плагина *после* библиотеки jQuery:
