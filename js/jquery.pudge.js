@@ -336,7 +336,6 @@
 				self.coord.lx = Math.abs(pointer(event).x);
 				self.coord.ly = Math.abs(pointer(event).y);
 
-
 				if (self.moveSpeed.length > 1) {
 					msl = self.moveSpeed.length;
 					distance = Math.abs(self.moveSpeed[msl-1].s - self.moveSpeed[msl-2].s);
@@ -347,7 +346,7 @@
 						position = Math.abs(getBoundingClientRect(self.$elem[0]).left);
 					} else {
 						position = Math.abs(getBoundingClientRect(self.$elem[0]).right - self.$win.width());
-					}
+					};
 
 					if ( self.moveSpeed[msl-1].s > self.moveSpeed[msl-2].s &&
 					   !(self.isRight + 1) )  {
@@ -361,7 +360,7 @@
 					} else if ( self.moveSpeed[msl-1].s > self.moveSpeed[msl-2].s &&
 					   !!(self.isRight + 1) ) {
 						direction = "right";
-					}
+					};
 
 					if (speed <= .1 && position <= self.elemWidth / 2) {
 						self.open("ease-out");
@@ -376,17 +375,15 @@
 					} else if (speed > .1 && direction === "left" && !!(self.isRight + 1)) {
 						self.open("ease-out");
 					}
-				}
-
-				$(this).off(self.touchEvents.move + "." + __pluginName, onMove);
+				};
 
 				for (var prop in self.coord) {
-					self.coord[prop] = null
+					self.coord[prop] = null;
 				};
 
 				self.moveSpeed = [];
 				self.direction = undefined;
-			}
+			};
 		},
 	}
 
