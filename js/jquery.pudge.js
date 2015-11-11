@@ -263,7 +263,7 @@
 				});
 
 				$(this).on(self.touchEvents.move + "." + __pluginName, onMove);
-			}
+			};
 
 			function onMove(event) {
 				self.coord.mx = Math.abs(pointer(event).x);
@@ -336,6 +336,7 @@
 				self.coord.lx = Math.abs(pointer(event).x);
 				self.coord.ly = Math.abs(pointer(event).y);
 
+
 				if (self.moveSpeed.length > 1) {
 					msl = self.moveSpeed.length;
 					distance = Math.abs(self.moveSpeed[msl-1].s - self.moveSpeed[msl-2].s);
@@ -374,17 +375,19 @@
 						self.close("ease-out");
 					} else if (speed > .1 && direction === "left" && !!(self.isRight + 1)) {
 						self.open("ease-out");
-					}
+					};
 				};
 
+				$(this).off(self.touchEvents.move + "." + __pluginName, onMove);
+
 				for (var prop in self.coord) {
-					self.coord[prop] = null;
+					self.coord[prop] = null
 				};
 
 				self.moveSpeed = [];
 				self.direction = undefined;
 			};
-		},
+		}
 	}
 
 	function getTransform(el) {
