@@ -1,8 +1,8 @@
 /**
  * pudgeJs - JQuery plugin for sliding menus and blocks.
- * @version v0.1.4
+ * @version v0.1.7
  * @link http://gitlab.dev.cs.m/mihail.domozhirov/pudgejs
- * @update 07.11.15
+ * @update 17.11.15
  * @license MIT
  */
 /*global $, jQuery*/
@@ -33,12 +33,12 @@
 		this.scrollTop = 0;
 
 		this.isOpened = false;
-		this.isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+		this.isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) && !window.MSStream;
 		this.isRight = getBoundingClientRect(this.$elem[0]).left < this.$win.width()/2 ? -1 : 1;;
 		this.isTouch = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
 		               .test(navigator.userAgent);
 
-		this.msPointerEnabled = window.navigator.msPointerEnabled;
+		this.msPointerEnabled = !("ontouchstart" in document);
 		this.touchEvents = {
 			start: this.isTouch ? this.msPointerEnabled ? "MSPointerDown" :
 			       "touchstart" : "mousedown",
@@ -123,7 +123,22 @@
 		},
 
 		close: function() {
-			var self = this;
+			var self = this,
+					duration = self.opt.duration,
+					timing = self.opt.timing;
+
+			if (!!arguments.length) {
+				for (var i = arguments.length - 1; i >= 0; i--) {
+					switch (typeof arguments[i]) {
+						case "string":
+							duration = arguments[i];
+							break;
+						case "number":
+							timing = arguments[i];
+							break;
+					};
+				};
+			};
 
 			self.isOpened = false;
 			this.elemWidth = getBoundingClientRect(this.$elem[0]).width;
@@ -364,17 +379,17 @@
 					};
 
 					if (speed <= .1 && position <= self.elemWidth / 2) {
-						self.open("ease-out");
+						self.open("cubic-bezier(0.1, 0.7, 0.1, 1)", .4);
 					} else if (speed <= .1 && position > self.elemWidth / 2) {
-						self.close("ease-out");
+						self.close("cubic-bezier(0.1, 0.7, 0.1, 1)", .4);
 					} else if (speed > .1 && direction === "left" && !(self.isRight + 1)) {
-						self.close("ease-out");
+						self.close("cubic-bezier(0.1, 0.7, 0.1, 1)", .4);
 					} else if (speed > .1 && direction === "right" && !(self.isRight + 1)) {
-						self.open("ease-out");
+						self.open("cubic-bezier(0.1, 0.7, 0.1, 1)", .4);
 					} else if (speed > .1 && direction === "right" && !!(self.isRight + 1)) {
-						self.close("ease-out");
+						self.close("cubic-bezier(0.1, 0.7, 0.1, 1)", .4);
 					} else if (speed > .1 && direction === "left" && !!(self.isRight + 1)) {
-						self.open("ease-out");
+						self.open("cubic-bezier(0.1, 0.7, 0.1, 1)", .4);
 					};
 				};
 
