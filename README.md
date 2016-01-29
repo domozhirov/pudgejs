@@ -13,7 +13,7 @@ jQuery-плагин, предназначеный для "выезжающего
 .myMenu {
 	position: fixed;
 	z-index: 2;
-	left: 0; // для выезжания с права - right: 0;
+	left: 0; // для выезжания справа - right: 0;
 	top: 0;
 	height: 100%;
 	width: 260px;
