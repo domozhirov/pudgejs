@@ -1,4 +1,4 @@
-# pudgeJS v0.1.4 beta
+# pudgeJS v0.1.8 beta
 
 jQuery-плагин, предназначеный для "выезжающего" меню
 

@@ -1,8 +1,8 @@
 /**
  * pudgeJs - JQuery plugin for sliding menus and blocks.
- * @version v0.1.7
+ * @version v0.1.8
  * @link http://gitlab.dev.cs.m/mihail.domozhirov/pudgejs
- * @update 17.11.15
+ * @update 01.09.16
  * @license MIT
  */
 /*global $, jQuery*/
@@ -151,7 +151,7 @@
 			}).play();
 
 			animit(this.$elem[0]).queue({
-				transform: "translate3d(" + 100 * self.isRight + "%, 0 ,0)"
+				transform: ""
 			}, {
 				duration: self.opt.duration,
 				timing: self.opt.timing
